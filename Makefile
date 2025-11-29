@@ -6,7 +6,7 @@
 #    By: dhde-lim <dhde-lim@student.42.rio>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/20 17:42:43 by dhde-lim          #+#    #+#              #
-#    Updated: 2025/11/17 01:41:19 by dhde-lim         ###   ########.fr        #
+#    Updated: 2025/11/29 19:50:11 by dhde-lim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,39 +16,42 @@ NAME 		= libftprintf.a
 
 CC 			= cc
 CFLAGS		= -Wall -Werror -Wextra
-CPPFLAGS	= -I.
+CPPFLAGS	= -Iincludes
 
-SRCS		= 	ft_printf.c \
-				ft_putnbr_ft.c \
-				ft_putstr_ft.c
+SRCS		= 	src/ft_printf.c		\
+				src/ft_putnbr_ft.c 	\
+				src/ft_putstr_ft.c 	\
+				src/ft_putchar_ft.c \
+				src/ft_putvoid_ft.c	\
+				src/ft_hexstr.c
+
 
 OBJS		= $(SRCS:.c=.o)
 
-LIBFT_PATH = libft
-LIBFT = ${LIBFT_PATH}/libft.a
+EXEC = program
+
+LIBFT = libft.a
 
 # TARGET
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	make -C ${LIBFT_PATH} all
-	cp ${LIBFT} ${NAME}
-	ar rcs $(NAME) $(OBJS)
+$(NAME): $(OBJS) $(LIBFT)
+	ar rcs $(NAME) $(OBJS) $(LIBFT)
 
 .c.o:
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
 clean:
-	make -C ${LIBFT_PATH} clean
-	rm -f $(OBJS)
+	rm -f $(OBJS) main.o
 
 fclean: clean
-	make -C ${LIBFT_PATH} fclean
 	rm -f $(NAME)
 
 re: fclean all
 
-# Makefile should never use the names below as files, but rather as 
-# the defined commands. 
+run: $(NAME) main.o
+	$(CC) $(CFLAGS) main.o $(NAME) -o $(EXEC)
+	./$(EXEC)
+
 .PHONY: all clean fclean re
